@@ -1,0 +1,89 @@
+---
+import ParticleFlowField from '@/components/particle-flow-field'
+import Link from '@/components/link.astro'
+import { buttonVariants } from '@/components/ui/button'
+import { SOCIAL_LINKS } from '@/consts'
+import { cn } from '@/lib/utils'
+import {
+  HERO_CTA_PRIMARY,
+  HERO_CTA_SECONDARY,
+  HERO_DESCRIPTION,
+  HERO_DISPLAY_NAME,
+  HERO_ROLE,
+} from '@/data/hero'
+---
+
+<section
+  class="relative isolate -mt-10 mb-8 min-h-[min(92vh,58rem)] w-screen max-w-[100vw] -translate-x-1/2 overflow-hidden border-y border-border bg-background left-1/2"
+  aria-label="Introduction"
+>
+  <ParticleFlowField client:load />
+
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,color-mix(in_oklch,var(--foreground)_8%,transparent),transparent_55%)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div
+    class="page-frame relative z-10 flex min-h-[min(92vh,58rem)] flex-col pt-16 pb-14 sm:pt-20 sm:pb-16 lg:pt-24"
+  >
+    <div class="flex min-w-0 flex-1 flex-col">
+      <div class="min-w-0">
+        <div class="min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <h1
+            class="text-foreground w-max max-w-none font-sans text-[clamp(2rem,min(11vw,12vh),8.5rem)] font-bold leading-[0.9] tracking-[-0.045em] uppercase whitespace-nowrap sm:leading-[0.88]"
+          >
+            {HERO_DISPLAY_NAME}
+          </h1>
+        </div>
+        <p class="text-foreground mt-4 text-xl font-medium sm:mt-5 sm:text-2xl">
+          {HERO_ROLE}
+        </p>
+        <p
+          class="text-muted-foreground mt-8 max-w-2xl text-pretty text-base leading-relaxed sm:text-lg lg:max-w-xl xl:max-w-2xl"
+        >
+          {HERO_DESCRIPTION}
+        </p>
+
+        <div
+          class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+        >
+          <Link
+            href={HERO_CTA_PRIMARY.href}
+            class={cn(buttonVariants({ variant: 'default', size: 'lg' }))}
+          >
+            {HERO_CTA_PRIMARY.label}
+          </Link>
+          <Link
+            href={HERO_CTA_SECONDARY.href}
+            external={HERO_CTA_SECONDARY.external}
+            class={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
+          >
+            {HERO_CTA_SECONDARY.label}
+          </Link>
+        </div>
+
+        <nav
+          class="text-muted-foreground mt-12 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs sm:mt-14"
+          aria-label="Social links"
+        >
+          {
+            SOCIAL_LINKS.filter((l) => l.label !== 'RSS').map((item) => (
+              <Link
+                href={item.href}
+                external={
+                  item.href.startsWith('http') ||
+                  item.href.startsWith('mailto')
+                }
+                class="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground/40"
+              >
+                {item.label}
+              </Link>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>

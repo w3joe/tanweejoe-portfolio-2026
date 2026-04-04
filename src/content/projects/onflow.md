@@ -1,0 +1,12 @@
+---
+name: 'Onflow'
+description: 'AI/ML research and startup — LLM embedding pipelines and synthetic behavioural personas from interaction data, retrieval and semantic similarity for large-scale simulation. Google hackathon winner; white paper; incubated in two London accelerators.'
+tags:
+  - TypeScript
+  - LLM
+  - Embeddings
+  - Research
+image: '../../../public/static/1200x630.png'
+link: 'https://github.com/Onflow-AI/onflow-landing'
+startDate: '2025-10-01'
+---

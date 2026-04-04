@@ -23,18 +23,21 @@ const { class: className } = Astro.props
   <Head>
     <slot name="head" />
   </Head>
-  <body class="flex h-fit min-h-screen flex-col gap-y-6 font-sans">
+  <body class="flex h-fit min-h-screen flex-col overflow-x-hidden font-sans">
     <header
-      class="bg-background/50 sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none"
+      class="sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none"
     >
       <Header />
       <slot name="subposts-navigation" />
       <slot name="table-of-contents" />
     </header>
     <main
-      class={cn('w-full mx-auto flex grow flex-col gap-y-6 px-4', className)}
+      transition:animate="fade"
+      class="box-border flex w-full grow flex-col px-[5vw] pt-10"
     >
-      <slot />
+      <div class={cn('mx-auto flex w-full flex-col gap-y-6', className)}>
+        <slot />
+      </div>
     </main>
     <Footer />
   </body>

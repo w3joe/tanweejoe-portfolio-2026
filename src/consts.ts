@@ -1,11 +1,11 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
-  title: 'astro-erudite',
+  title: 'Tan Wee Joe',
   description:
-    'astro-erudite is a opinionated, unstyled blogging template—built with Astro, Tailwind, and shadcn/ui.',
-  href: 'https://astro-erudite.vercel.app',
-  author: 'jktrn',
+    'AI & Software Engineer — building innovative solutions and experiences to empower lives.',
+  href: 'https://tanweejoe.com',
+  author: 'Tan Wee Joe',
   locale: 'en-US',
   featuredPostCount: 2,
   postsPerPage: 3,
@@ -17,10 +17,6 @@ export const NAV_LINKS: SocialLink[] = [
     label: 'blog',
   },
   {
-    href: '/authors',
-    label: 'authors',
-  },
-  {
     href: '/about',
     label: 'about',
   },
@@ -28,16 +24,24 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://github.com/jktrn',
+    href: 'https://github.com/w3joe',
     label: 'GitHub',
   },
   {
-    href: 'https://twitter.com/enscry',
-    label: 'Twitter',
+    href: 'https://www.linkedin.com/in/tanweejoe',
+    label: 'LinkedIn',
   },
   {
-    href: 'mailto:jason@enscribe.dev',
+    href: 'mailto:tanweejoe@gmail.com',
     label: 'Email',
+  },
+  {
+    href: 'https://huggingface.co/w3joe',
+    label: 'Hugging Face',
+  },
+  {
+    href: 'https://scholar.google.com/citations?user=VRQuj7sAAAAJ&hl=en',
+    label: 'Google Scholar',
   },
   {
     href: '/rss.xml',
@@ -52,4 +56,6 @@ export const ICON_MAP: IconMap = {
   Twitter: 'lucide:twitter',
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
+  'Hugging Face': 'lucide:brain',
+  'Google Scholar': 'lucide:graduation-cap',
 }

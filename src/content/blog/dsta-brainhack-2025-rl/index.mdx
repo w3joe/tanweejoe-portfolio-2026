@@ -1,0 +1,116 @@
+---
+title: 'Sleepless nights and stolen points: building an RL agent for DSTA Brainhack 2025'
+description: 'How Richie and I spent the final night before semifinals trial-and-erroring our way through PPO, BFS, A*, and finally PPO+LSTM to build an agent that could think.'
+date: 2025-06-01
+tags: ['reinforcement-learning', 'hackathon', 'machine-learning']
+authors: ['tan-wee-joe']
+draft: false
+---
+
+## The competition
+
+**[DSTA Brainhack 2025](https://www.dsta.gov.sg/brainhack)** is not your typical weekend hackathon. Over roughly **six weeks**, teams compete across three tracks — computer vision, automatic speech recognition, and reinforcement learning. My team was Richie, Javier, Jia Yu, and me. Javier and Jia Yu anchored the CV and ASR challenges. Richie and I owned the RL track.
+
+The goal of the RL challenge sounded deceptively simple: navigate a grid map, collect as many points as possible, and do not get caught by the guards. The catch — your agent can only see within a limited **viewcone**. You are always partially blind. Guards move. The map does not explain itself. And you only have however many training runs you can squeeze in before the clock runs out.
+
+We made it to the **semifinals, finishing in the top 16** nationally. We did not make the final cut. But the journey of getting there — especially the night before submission — is the part I keep thinking about.
+
+## Six weeks that felt like one long sprint
+
+The competition gave us time, but time spent iterating on an RL agent has a way of evaporating. Every approach feels promising until it fails in a way you did not anticipate, and then you spend a day diagnosing the failure before you earn the right to try something new.
+
+Early on I worked largely independently, running experiments and reading papers between other commitments. The environment's partial observability made it immediately clear that vanilla approaches would struggle: if your agent cannot remember where it has been, it will circle back into guards it already encountered.
+
+What made this especially brutal was containerisation. **Docker** was our deployment target — every submission had to run cleanly inside a container, which meant environment setup, dependency pinning, and reproduction bugs were a constant tax on top of the actual research work. Getting a training loop working on your machine and then watching it silently fail inside a container at 2 a.m. is a specific kind of pain.
+
+## Four approaches, three dead ends
+
+### Vanilla PPO
+
+The natural starting point. Proximal Policy Optimisation with a standard feedforward network. It trained fast, was well-understood, and failed in a very predictable way: the agent had no memory. Every timestep was evaluated in isolation. It learned to react but not to *reason*. Guards it had seen ten steps ago were invisible to it now. The performance plateau came quickly.
+
+**What it taught me:** memoryless policies are fundamentally inadequate for environments with partial observability. You are not solving the right problem.
+
+### BFS
+
+Stepping back from learned policies entirely, I tried classical pathfinding. BFS finds the shortest path to a known objective — and it did exactly that. Deterministically. Efficiently. Without any ability to adapt when a guard moved into the path it had computed.
+
+The issue is that BFS assumes a static world. Our world was adversarial. Guards do not care about your planned route.
+
+**What it taught me:** optimal in a known world, brittle in an unknown one.
+
+### A\*
+
+A natural upgrade from BFS — heuristic pathfinding with Manhattan distance to the goal. Better efficiency, same core problem. A* navigated more cleanly toward objectives but was just as blind to dynamic threats. You can have perfect goal-oriented movement and still walk straight into a guard.
+
+**What it taught me:** smarter pathfinding is not a substitute for learning. The adversarial component cannot be heuristically patched around.
+
+### PPO + LSTM — the one that worked
+
+The breakthrough came when we paired PPO with an **LSTM layer** between the input and the policy/value heads:
+
+```
+Input (Viewcone + State) → LSTM(128) → Dense(64) → Policy Head
+                                                   → Value Head
+```
+
+The LSTM carries a hidden state across timesteps. It gave the agent something it had never had before: **memory**. Not a map in the traditional sense, but a compressed, learned representation of what it had observed over time. Suddenly the agent could anticipate where guards might be based on where they *were*. It could remember which areas it had already swept. It could make decisions that were not purely reactive.
+
+The performance delta was immediately visible — higher points per episode, lower capture rate, more purposeful navigation patterns.
+
+## Reward engineering: the part nobody talks about enough
+
+Getting the architecture right was half the battle. The reward function was the other half, and it required the kind of obsessive iteration that only makes sense at 3 a.m.
+
+The failure modes were specific and frustrating:
+
+- The agent became **too conservative** — it found a safe corner and sat there, technically not getting caught, technically scoring nothing useful.
+- It fell into **local optima** — find one point, return to start, repeat forever.
+- **Back-and-forth oscillation** — the agent would shuffle between two tiles endlessly rather than committing to a direction.
+
+Each failure mode required a targeted intervention. The final reward structure that shipped:
+
+```python
+reward = {
+    'point_collection':       +50,   # Prioritise the actual objective
+    'step_penalty':           -0.5,  # Punish aimless wandering
+    'capture_penalty':        -200,  # Capture is catastrophic
+    'distance_to_point':      -0.2,  # Nudge agent toward objectives
+    'guard_proximity_penalty': -5,   # Discourage unnecessary risk
+    'exploration_bonus':       +2,   # Reward new tile discovery
+    'wall_collision':          -1,   # No valid reason to hit walls
+}
+```
+
+The `capture_penalty` being 4× the `point_collection` reward sounds aggressive, but anything softer and the agent treated capture as an acceptable trade-off for a scoring opportunity. It needed to genuinely fear being caught.
+
+## The night before
+
+We did not sleep before the semifinals submission.
+
+By the evening prior, the PPO+LSTM agent was trained and running — but not well enough. The submission window was a fixed deadline. Whatever we uploaded was what the judges would evaluate. Richie and I spent the entire night running variants: adjusting reward weights, tweaking LSTM hidden size, trying different training durations, and diagnosing why certain configurations that looked good in local eval performed inconsistently on the judge's environment.
+
+Docker made every iteration slower. A change to the training script meant rebuilding the container, re-running, extracting the artefact, repackaging. By 4 a.m. we had a system that worked, but "works" in RL means "performs well enough on average" — and you never fully know until the evaluation runs on their infrastructure.
+
+We submitted. We waited.
+
+## Top 16 — and what I'd do differently
+
+We made the semifinals. **Top 16 nationally** is a result I'm proud of, especially given that the RL track is the least formulaic of the three — CV and ASR have clearer solution templates; RL requires you to actually figure out the environment.
+
+We did not make the finals cut. Looking back, the things I would change:
+
+1. **Start LSTM earlier.** We spent too long trying to extract value from memoryless architectures. The moment partial observability is a constraint, memory should be the first hypothesis.
+2. **Invest in evaluation infrastructure sooner.** The Docker pain was partly because we set it up properly only late in the competition. Getting the containerised eval loop working in week one would have saved hours.
+3. **More aggressive reward shaping from day one.** The final reward function was the product of failure analysis. Running a set of deliberate ablations earlier would have surfaced the failure modes faster.
+
+## What it took
+
+Six weeks, four architectural approaches, one sleepless night, and a teammate willing to stare at loss curves alongside you until dawn.
+
+The RL challenge at Brainhack is legitimately hard. The environment is adversarial, the observability is constrained, and the evaluation is unforgiving. Getting a PPO+LSTM agent to the point where it navigates intelligently — collecting points, anticipating guards, exploring efficiently — required not just the right architecture but the right reward signal, the right training time, and the right willingness to throw away what was not working.
+
+Top 16. A result I'll keep building on.
+
+- **Source:** [github.com/w3joe/Hackoholics-BH25](https://github.com/w3joe/Hackoholics-BH25)
+- **Competition:** [DSTA Brainhack 2025](https://www.dsta.gov.sg/brainhack)

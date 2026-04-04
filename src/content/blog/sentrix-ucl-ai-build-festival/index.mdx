@@ -1,0 +1,60 @@
+---
+title: 'Building Sentrix in 24 hours and winning the UCL AI Build festival'
+description: 'How we shipped an agentic security layer for AI swarms at the UCL AI Engine hackathon, from idea to demo in one day.'
+date: 2026-02-28
+tags: ['hackathon', 'agents', 'security']
+authors: ['tan-wee-joe']
+draft: false
+---
+
+## The brief
+
+In February I took part in **[Build: AI Festival 2026](https://aienginehack.com/feb)**, the UCL AI Engine hackathon, with a simple anxiety and a simple bet. Autonomous agents are moving from demos to real workflows; the moment tools and memory sit behind an LLM, “one weird message” can become a data leak or a hijacked run. We wanted to see whether we could ship something *useful* in **24 hours**: not a slide deck, but a system you could run, point at an agent stack, and reason about when things go wrong.
+
+That weekend became **[Sentrix](https://www.sentrixai.xyz)**: “agentic police” for AI swarms: patrol-style monitoring, escalation, and a path to human review. We walked away with the win for the track. This post is the story of how we got there, and where the project went next.
+
+## Constraint as design
+
+Twenty-four hours forces ugly, good decisions. We could not boil the ocean:
+
+- **Patrols:** watch tool calls and outputs for obvious bad patterns (secrets, PII-shaped blobs, suspicious instructions) in near real time.
+- **Investigators:** a heavier pass when patrols flag something: classify *what* happened and *how bad* it is, not just regex panic.
+- **Superintendent:** stitch findings into something a human can act on, so “alert fatigue” does not become “ignore fatigue.”
+
+That three-layer story (constant watch, deep look, executive summary) is how real incident response teams think. We borrowed the metaphor on purpose: it made the architecture legible to judges, users, and ourselves at 3 a.m.
+
+## What we actually shipped
+
+The hackathon deliverable was an end-to-end **demo you could run**: install, bring your environment up (we leaned on **Docker** for isolation and repeatability), and show a swarm misbehaving *and* being caught. Python 3.10+ and containerized sandboxes kept us honest: if it only worked on one laptop, we failed.
+
+We integrated with the **OpenClaw** ecosystem mindset early: agents are not abstract; they call tools and leave traces. Sentrix sits in that path as observability plus enforcement, not as a lecture about “being careful.”
+
+The public site today, [sentrixai.xyz](https://www.sentrixai.xyz), reflects how far the product narrative and stack have evolved (including our work with **NVIDIA Nemotron** for investigative agents and serious training metrics). The hackathon version was rougher, smaller, and messier, but the **core promise** was the same: *rogue behaviour is inevitable; containment and visibility are not optional.*
+
+## Why it resonated with the jury
+
+Hackathons reward **clarity** and **credibility**. We focused on:
+
+1. **A sharp threat story:** not FUD, but concrete failure modes people already fear (leaks, injection, tool abuse).
+2. **A live arc:** show the anomaly, show the chase, show the quarantine. Story beats feature list.
+3. **Something to clone:** judges (and developers) trust repos. Everything worth citing lives in the open: **[github.com/w3joe/sentrix](https://github.com/w3joe/sentrix)**.
+
+If you are building for a short clock: optimize for the *one* demo that proves you understand the problem domain.
+
+## After the buzzer
+
+Winning a festival is a milestone, not a destination. Since the hackathon we have pushed Sentrix toward **public beta**: better docs, a clearer install path (`pip install openclaw-sentrix` / `uv` alternatives), and a landing experience that matches how teams actually evaluate security tools.
+
+If you are curious, start here:
+
+- **Product & story:** [sentrixai.xyz](https://www.sentrixai.xyz)
+- **Source of truth:** [github.com/w3joe/sentrix](https://github.com/w3joe/sentrix)
+- **The event:** [aienginehack.com/feb](https://aienginehack.com/feb)
+
+## Takeaways
+
+- **Time-boxing** killed scope creep; the police metaphor gave us a shared blueprint.
+- **Runnable beats theoretical:** Docker and a CLI turned “idea” into evidence.
+- **Open source** made the win legible after the room emptied.
+
+Building Sentrix in a day did not solve agentic security. It proved we cared enough to ship first and iterate in public, which, for a swarm of models nobody fully controls, feels like the only honest place to start.

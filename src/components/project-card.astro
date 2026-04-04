@@ -13,58 +13,57 @@ interface Props {
 const { project } = Astro.props
 ---
 
-<div
-  class="hover:bg-muted/50 rounded-xl border p-4 transition-colors duration-300 ease-in-out"
->
+<div class="glass group overflow-hidden rounded-xl border transition-shadow hover:shadow-lg">
   <Link
     href={project.data.link}
-    class="flex flex-col gap-4 sm:flex-row"
+    class="flex flex-col md:flex-row md:items-stretch"
     external
   >
     {
       project.data.image && (
-        <div class="w-full sm:max-w-3xs sm:shrink-0">
+        <div
+          class="relative min-h-[12rem] w-full shrink-0 overflow-hidden border-b border-border/60 md:min-h-0 md:w-[42%] md:border-r md:border-b-0 md:border-border/60"
+        >
           <Image
             src={project.data.image}
             alt={project.data.name}
             width={1200}
             height={630}
-            class="object-cover"
+            class="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
         </div>
       )
     }
-    <div class="grow">
-      <h3 class="mb-1 text-lg font-medium">
-        {project.data.name}
-      </h3>
-      <p class="text-muted-foreground mb-2 text-sm">
+    <div class="flex flex-1 flex-col justify-center p-5">
+      <div class="mb-2 flex items-start justify-between gap-3">
+        <h3 class="text-base font-semibold leading-snug">{project.data.name}</h3>
+        <Icon
+          name="lucide:arrow-up-right"
+          class="text-muted-foreground group-hover:text-foreground mt-0.5 size-4 shrink-0 transition-colors"
+        />
+      </div>
+      <p class="text-muted-foreground mb-3 text-sm leading-relaxed">
         {project.data.description}
       </p>
-      {
-        project.data.startDate && (
-          <p class="text-muted-foreground/70 mb-2 flex items-center gap-x-1.5 text-xs">
-            <span class="flex items-center gap-x-1.5">
+      <div class="flex items-center justify-between gap-2">
+        {
+          project.data.tags && (
+            <div class="flex flex-wrap gap-1.5">
+              {project.data.tags.map((tag: string) => (
+                <Badge variant="muted">{tag}</Badge>
+              ))}
+            </div>
+          )
+        }
+        {
+          project.data.startDate && (
+            <p class="text-muted-foreground/60 ml-auto flex shrink-0 items-center gap-1 font-mono text-xs">
               <Icon name="lucide:calendar" class="size-3" />
-              <span>
-                {formatDate(project.data.startDate)}
-                {project.data.endDate
-                  ? ` → ${formatDate(project.data.endDate)}`
-                  : ' → Present'}
-              </span>
-            </span>
-          </p>
-        )
-      }
-      {
-        project.data.tags && (
-          <div class="flex flex-wrap gap-2">
-            {project.data.tags.map((tag: string) => (
-              <Badge variant="muted">{tag}</Badge>
-            ))}
-          </div>
-        )
-      }
+              {formatDate(project.data.startDate)}
+            </p>
+          )
+        }
+      </div>
     </div>
   </Link>
 </div>

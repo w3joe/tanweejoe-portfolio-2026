@@ -1,5 +1,4 @@
 ---
-import Breadcrumbs from '@/components/breadcrumbs.astro'
 import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
 import ProjectCard from '@/components/project-card.astro'
@@ -11,34 +10,44 @@ const projects = await getAllProjects()
 
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="About" />
-  <Breadcrumbs items={[{ label: 'About', icon: 'lucide:info' }]} />
-
   <section>
     <div class="min-w-full">
       <div class="prose mb-8">
         <p class="mt-0">
-          astro-erudite is an opinionated, unstyled static blogging template
-          that prioritizes simplicity and performance, built with <Link
-            href="https://astro.build"
-            external
-            underline>Astro</Link
-          >, <Link href="https://tailwindcss.com" external underline
-            >Tailwind</Link
-          >, and <Link href="https://ui.shadcn.com" external underline
-            >shadcn/ui</Link
-          >. It provides a clean foundation for your content while being
-          extremely easy to customize.
+          I&apos;m <strong>Tan Wee Joe</strong>, an AI and software engineer focused on
+          systems that are reliable, observable, and useful in production. I care
+          about turning complex requirements into clear software—whether that is
+          data pipelines, ML services, or full-stack products.
         </p>
         <p>
-          To learn more about the philosophy behind this template, check out the
-          following blog post: <Link
-            href="/blog/the-state-of-static-blogs"
-            underline>The State of Static Blogs in 2024</Link
-          >.
+          I am pursuing a <strong>BSc in Computer Science</strong> at{' '}
+          <Link href="https://www.ucl.ac.uk" external underline
+            >University College London</Link
+          > (from Sep 2025). Earlier, I completed a Diploma in Computer Engineering at{' '}
+          <Link href="https://www.sp.edu.sg" external underline
+            >Singapore Polytechnic</Link
+          > (Apr 2020–May 2023), where I graduated as valedictorian. I have also taken
+          part in the{' '}
+          <Link href="https://ases.stanford.edu" external underline
+            >Stanford ASES Entrepreneurship Bootcamp</Link
+          > (Jan 2026 onwards).
+        </p>
+        <p>
+          Outside of coursework, I build agentic and ML-heavy projects—from
+          security observability for LLM workflows to embedding-driven simulation—and
+          I enjoy collaborating across research, product, and infrastructure.
+        </p>
+        <p>
+          Want to collaborate? Reach me on{' '}
+          <Link href="https://www.linkedin.com/in/tanweejoe" external underline
+            >LinkedIn</Link
+          >{' '}
+          or via{' '}
+          <Link href="mailto:tanweejoe@gmail.com" underline>email</Link>.
         </p>
       </div>
 
-      <h2 class="mb-4 text-2xl font-medium">Example Projects Listing</h2>
+      <h2 class="mb-4 text-2xl font-medium">Projects</h2>
       <div class="flex flex-col gap-4">
         {projects.map((project) => <ProjectCard project={project} />)}
       </div>
