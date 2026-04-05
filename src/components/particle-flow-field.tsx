@@ -61,8 +61,8 @@ const MOUSE_R     = 120     // repulsion radius (px)
 const MOUSE_STR   = 1.5     // repulsion strength
 const CONN_DIST   = 100     // max distance for line (px)
 const CONN_DIST_SQ = CONN_DIST * CONN_DIST
-const LINE_ALPHA  = 0.22    // max line alpha
-const DOT_ALPHA   = 0.55
+const LINE_ALPHA  = 0.8     // max line alpha
+const DOT_ALPHA   = 0.6
 const DOT_R       = 6
 const BUCKETS     = 4       // alpha batches for line rendering
 

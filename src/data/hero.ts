@@ -8,11 +8,6 @@ export const HERO_IPA = '/wiː ˈdʒəʊ/'
 export const HERO_ROLE = 'AI & Software Engineer'
 
 export const HERO_DESCRIPTION =
-  'I build production ML pipelines, agentic workflows, and full-stack products — from ingestion and observability to interfaces people actually use.'
+  'I build production ML pipelines, agentic workflows, and full-stack products, from ingestion and observability to interfaces people actually use.'
 
 export const HERO_CTA_PRIMARY = { href: '/about', label: 'View work & projects' }
-export const HERO_CTA_SECONDARY = {
-  href: 'https://www.linkedin.com/in/tanweejoe',
-  label: 'Connect on LinkedIn',
-  external: true,
-}

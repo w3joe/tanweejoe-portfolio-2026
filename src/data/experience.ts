@@ -10,6 +10,16 @@ export type ExperienceEntry = {
 
 export const EXPERIENCE: ExperienceEntry[] = [
   {
+    title: 'AI Engineer Intern',
+    organization: 'Tracer',
+    start: 'Mar 2026',
+    end: 'Present',
+    bullets: [
+      'Built LangGraph-based agent workflows for OpenSRE, turning incident triage, runbooks, and operational tooling into stateful, tool-calling graphs with explicit control flow for production reliability work.',
+      'Connected observability and SRE systems into those pipelines so multi-step remediation stays traceable, repeatable, and easier to extend than ad-hoc scripts during on-call.',
+    ],
+  },
+  {
     title: 'AI Engineer',
     organization: 'PixelPro Studios',
     location: 'Remote',

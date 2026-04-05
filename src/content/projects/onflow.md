@@ -6,7 +6,6 @@ tags:
   - LLM
   - Embeddings
   - Research
-image: '../../../public/static/1200x630.png'
 link: 'https://github.com/Onflow-AI/onflow-landing'
 startDate: '2025-10-01'
 ---

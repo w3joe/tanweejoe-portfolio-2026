@@ -1,36 +1,77 @@
 ---
+import StructuredData from '@/components/structured-data.astro'
 import { SITE } from '@/consts'
+import { absoluteUrl, canonicalHref, profileSameAs } from '@/lib/seo'
 
 interface Props {
   title?: string
   description?: string
+  /** When true, `<title>` is exactly `title` (no ` | Site name` suffix). Use for homepage. */
+  titleIsComplete?: boolean
+  /** Site-relative path (e.g. `/static/og.png`) or absolute URL for og:image / twitter:image */
+  image?: string
   noindex?: boolean
+  /** Include WebSite + Person JSON-LD (recommended for homepage only). */
+  structuredData?: boolean
 }
 
 const {
   title = SITE.title,
   description = SITE.description,
+  titleIsComplete = false,
+  image = '/W3Joe.svg',
   noindex = false,
+  structuredData = false,
 } = Astro.props
-const image = new URL('/static/1200x630.png', Astro.site)
+
+const pageTitle = titleIsComplete ? title : `${title} | ${SITE.title}`
+const canonical = canonicalHref(Astro.site, Astro.url.pathname)
+const ogImage =
+  image.startsWith('http') ? image : absoluteUrl(Astro.site, image)
+
+const websiteSchemas = structuredData
+  ? [
+      {
+        '@type': 'WebSite',
+        name: SITE.title,
+        url: SITE.href,
+        description: SITE.description,
+        inLanguage: SITE.locale,
+        publisher: { '@id': `${SITE.href}#person` },
+      },
+      {
+        '@type': 'Person',
+        '@id': `${SITE.href}#person`,
+        name: SITE.author,
+        url: SITE.href,
+        sameAs: profileSameAs(),
+      },
+    ]
+  : null
 ---
 
-<title>{`${title} | ${SITE.title}`}</title>
+<title>{pageTitle}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={SITE.href} />
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="canonical" href={canonical} />
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <meta name="robots" content="index, follow" />
+)}
 
-<meta property="og:title" content={title} />
+<meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={image} />
-<meta property="og:image:alt" content={title} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={pageTitle} />
 <meta property="og:type" content="website" />
 <meta property="og:locale" content={SITE.locale} />
 <meta property="og:site_name" content={SITE.title} />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:url" content={canonical} />
 
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={image} />
-<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={pageTitle} />
 <meta name="twitter:card" content="summary_large_image" />
+
+{websiteSchemas && <StructuredData data={websiteSchemas} />}

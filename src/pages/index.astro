@@ -1,12 +1,13 @@
 ---
+import AboutIntro from '@/components/about-intro.astro'
 import BlogCard from '@/components/blog-card.astro'
+import ExperienceSection from '@/components/experience-section.astro'
 import HomeHero from '@/components/home-hero.astro'
 import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
 import ProjectCard from '@/components/project-card.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { SITE } from '@/consts'
-import { EXPERIENCE } from '@/data/experience'
 import Layout from '@/layouts/layout.astro'
 import { getAllProjects, getRecentPosts } from '@/lib/data-utils'
 
@@ -16,62 +17,17 @@ const featuredProjects = allProjects.slice(0, 4)
 ---
 
 <Layout class="max-w-3xl">
-  <PageHead slot="head" title="Home" />
+  <PageHead
+    slot="head"
+    titleIsComplete
+    title="Tan Wee Joe — AI & Software Engineer"
+    structuredData
+  />
   <HomeHero />
 
-  <section class="flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">About</h2>
-    <div class="prose text-muted-foreground max-w-none text-sm">
-      <p class="mt-0">
-        I&apos;m a passionate software engineer who believes in the transformative
-        power of technology.
-      </p>
-      <p>
-        With a strong foundation in both frontend and backend development, I
-        specialise in creating digital solutions that make a real difference in
-        people&apos;s lives.
-      </p>
-    </div>
-  </section>
+  <AboutIntro />
 
-  <section class="flex flex-col gap-y-6">
-    <h2 class="text-2xl font-medium">Experience</h2>
-    <ol class="relative flex flex-col gap-0 border-l border-border">
-      {
-        EXPERIENCE.map((job) => (
-          <li class="group relative pb-8 pl-8 last:pb-0">
-            {/* Timeline dot */}
-            <span class="bg-background border-border group-last:border-foreground absolute -left-[5px] top-1.5 size-2.5 rounded-full border-2 transition-colors group-hover:border-foreground" />
-
-            {/* Date badge */}
-            <p class="text-muted-foreground mb-2 font-mono text-xs tracking-wide">
-              {job.start} — {job.end}
-            </p>
-
-            <div class="glass rounded-xl border p-4 transition-shadow hover:shadow-md">
-              <div class="mb-3 flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h3 class="text-lg font-semibold leading-snug">{job.organization}</h3>
-                  <p class="text-muted-foreground text-sm">
-                    {job.title}
-                    {job.location ? ` · ${job.location}` : ''}
-                  </p>
-                </div>
-              </div>
-              <ul class="text-muted-foreground space-y-2 text-sm">
-                {job.bullets.map((b) => (
-                  <li class="flex gap-2">
-                    <span class="text-foreground/30 mt-1 shrink-0 text-xs">▸</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+  <ExperienceSection />
 
   <section class="flex flex-col gap-y-4">
     <div class="flex items-end justify-between gap-4">

@@ -79,14 +79,9 @@
 }
 
 @layer components {
-  /** 5% of viewport width on each side — use with `.page-frame` for the content column. */
-  .page-gutter {
-    @apply px-[5vw];
-  }
-
-  /** Centered reading column inside the gutter. */
+  /** Header, footer, hero copy: same max width + horizontal inset as main content. */
   .page-frame {
-    @apply mx-auto w-full max-w-3xl;
+    @apply mx-auto w-full max-w-3xl px-4;
   }
 }
 

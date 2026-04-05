@@ -2,11 +2,9 @@
 import ParticleFlowField from '@/components/particle-flow-field'
 import Link from '@/components/link.astro'
 import { buttonVariants } from '@/components/ui/button'
-import { SOCIAL_LINKS } from '@/consts'
 import { cn } from '@/lib/utils'
 import {
   HERO_CTA_PRIMARY,
-  HERO_CTA_SECONDARY,
   HERO_DESCRIPTION,
   HERO_DISPLAY_NAME,
   HERO_ROLE,
@@ -46,43 +44,12 @@ import {
           {HERO_DESCRIPTION}
         </p>
 
-        <div
-          class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+        <Link
+          href={HERO_CTA_PRIMARY.href}
+          class={cn(buttonVariants({ variant: 'default', size: 'lg' }), 'mt-10')}
         >
-          <Link
-            href={HERO_CTA_PRIMARY.href}
-            class={cn(buttonVariants({ variant: 'default', size: 'lg' }))}
-          >
-            {HERO_CTA_PRIMARY.label}
-          </Link>
-          <Link
-            href={HERO_CTA_SECONDARY.href}
-            external={HERO_CTA_SECONDARY.external}
-            class={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
-          >
-            {HERO_CTA_SECONDARY.label}
-          </Link>
-        </div>
-
-        <nav
-          class="text-muted-foreground mt-12 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs sm:mt-14"
-          aria-label="Social links"
-        >
-          {
-            SOCIAL_LINKS.filter((l) => l.label !== 'RSS').map((item) => (
-              <Link
-                href={item.href}
-                external={
-                  item.href.startsWith('http') ||
-                  item.href.startsWith('mailto')
-                }
-                class="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground/40"
-              >
-                {item.label}
-              </Link>
-            ))
-          }
-        </nav>
+          {HERO_CTA_PRIMARY.label}
+        </Link>
       </div>
     </div>
   </div>

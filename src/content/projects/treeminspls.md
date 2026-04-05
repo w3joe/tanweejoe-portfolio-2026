@@ -5,7 +5,6 @@ tags:
   - TypeScript
   - Agents
   - Product
-image: '../../../public/static/1200x630.png'
 link: 'https://github.com/w3joe/treeminspls'
 startDate: '2025-04-01'
 ---

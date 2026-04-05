@@ -5,7 +5,6 @@ tags:
   - Python
   - Hackathon
   - AI
-image: '../../../public/static/1200x630.png'
 link: 'https://github.com/w3joe/Hackoholics-BH25'
 startDate: '2025-06-01'
 ---

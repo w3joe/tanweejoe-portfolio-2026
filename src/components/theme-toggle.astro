@@ -8,7 +8,7 @@ import { Icon } from 'astro-icon/components'
   variant="ghost"
   size="icon"
   title="Toggle theme"
-  className="-my-2 -me-2 size-8"
+  className="relative -my-2 -me-2 size-8"
 >
   <Icon name="lucide:sun" class="size-4 dark:hidden" />
   <Icon name="lucide:moon" class="absolute hidden size-4 dark:block" />
@@ -31,7 +31,7 @@ import { Icon } from 'astro-icon/components'
 </script>
 
 <script>
-  async function handleToggleClick(event: MouseEvent) {
+  async function handleToggleClick(_event: MouseEvent, toggleEl: HTMLElement) {
     const element = document.documentElement
     const currentTheme = element.getAttribute('data-theme')
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
@@ -45,7 +45,7 @@ import { Icon } from 'astro-icon/components'
       return
     }
 
-    const button = (event.currentTarget as HTMLElement).getBoundingClientRect()
+    const button = toggleEl.getBoundingClientRect()
     const x = button.left + button.width / 2
     const y = button.top + button.height / 2
     const maxRadius = Math.hypot(
@@ -76,13 +76,26 @@ import { Icon } from 'astro-icon/components'
     )
   }
 
-  function initThemeToggle() {
-    document
-      .getElementById('theme-toggle')
-      ?.addEventListener('click', handleToggleClick)
+  /** One delegated listener — avoids duplicate handlers when `astro:after-swap` runs with `transition:persist`. */
+  function initThemeToggleOnce() {
+    if ((window as unknown as { __themeToggleDocListener?: boolean })
+      .__themeToggleDocListener) {
+      return
+    }
+    ;(window as unknown as { __themeToggleDocListener: boolean }).__themeToggleDocListener =
+      true
+
+    document.addEventListener('click', (event) => {
+      const el = (event.target as HTMLElement | null)?.closest(
+        '#theme-toggle',
+      )
+      if (!el) return
+      event.preventDefault()
+      void handleToggleClick(event, el as HTMLElement)
+    })
   }
 
-  initThemeToggle()
+  initThemeToggleOnce()
 
   document.addEventListener('astro:after-swap', () => {
     const storedTheme = localStorage.getItem('theme') || 'light'
@@ -95,7 +108,5 @@ import { Icon } from 'astro-icon/components'
     requestAnimationFrame(() => {
       element.classList.remove('[&_*]:transition-none')
     })
-
-    initThemeToggle()
   })
 </script>

@@ -6,7 +6,6 @@ tags:
   - LLM
   - Security
   - Observability
-image: '../../../public/static/1200x630.png'
 link: 'https://github.com/w3joe/sentrix'
 startDate: '2026-01-15'
 ---

@@ -1,0 +1,122 @@
+---
+import { EXPERIENCE } from '@/data/experience'
+---
+
+<section class="flex flex-col gap-y-6" aria-labelledby="experience-heading">
+  <h2 id="experience-heading" class="text-2xl font-medium">Experience</h2>
+  <div class="relative" data-experience-track>
+    <div
+      class="pointer-events-none absolute top-0 bottom-0 left-0 w-px bg-border"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="experience-line-fill pointer-events-none absolute top-0 left-0 w-0.5 max-h-full rounded-full bg-foreground"
+      style="height: 0%;"
+      aria-hidden="true"
+      data-experience-line-fill
+    >
+    </div>
+    <ol class="relative z-[1] flex flex-col gap-0">
+      {
+        EXPERIENCE.map((job) => (
+          <li
+            class="group experience-item relative pb-12 pl-8 last:pb-0"
+            data-experience-item
+          >
+            <span
+              class="experience-dot bg-background border-border group-hover:border-foreground absolute top-7 -left-[5px] z-[2] size-2.5 rounded-full border-2 transition-colors sm:top-8"
+              aria-hidden="true"
+            />
+
+            <div class="glass experience-card rounded-xl border p-6 sm:p-8">
+              <div class="mb-5 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 class="text-lg font-semibold leading-snug">{job.organization}</h3>
+                  <p class="text-muted-foreground text-sm">
+                    {job.title}
+                    {job.location ? ` · ${job.location}` : ''}
+                  </p>
+                </div>
+              </div>
+              <ul class="text-muted-foreground space-y-3 text-sm">
+                {job.bullets.map((b) => (
+                  <li class="flex gap-3">
+                    <span class="text-foreground/30 mt-1 shrink-0 text-xs">▸</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  import { mountExperienceTimeline } from '@/lib/experience-timeline'
+
+  let cleanup = () => {}
+  function run() {
+    cleanup()
+    const next = mountExperienceTimeline()
+    cleanup = next ?? (() => {})
+  }
+
+  run()
+  document.addEventListener('astro:page-load', run)
+</script>
+
+<style>
+  /* Hover: stronger glass — blur, frost, edge light */
+  .glass.experience-card {
+    transition:
+      background 280ms ease,
+      border-color 280ms ease,
+      box-shadow 280ms ease,
+      backdrop-filter 320ms ease,
+      -webkit-backdrop-filter 320ms ease;
+  }
+
+  .glass.experience-card:hover {
+    backdrop-filter: blur(22px) saturate(1.25);
+    -webkit-backdrop-filter: blur(22px) saturate(1.25);
+    background: oklch(from var(--background) l c h / 0.48);
+    border-color: color-mix(in oklch, var(--foreground) 14%, var(--border));
+    box-shadow:
+      0 0 0 1px oklch(from var(--foreground) l c h / 0.07),
+      0 4px 12px oklch(0 0 0 / 0.06),
+      0 18px 48px oklch(0 0 0 / 0.1),
+      inset 0 1px 0 oklch(1 0 0 / 0.22);
+  }
+
+  [data-theme='dark'] .glass.experience-card:hover {
+    background: oklch(from var(--background) l c h / 0.4);
+    border-color: color-mix(in oklch, var(--foreground) 20%, var(--border));
+    box-shadow:
+      0 0 0 1px oklch(1 0 0 / 0.12),
+      0 8px 24px oklch(0 0 0 / 0.35),
+      0 24px 56px oklch(0 0 0 / 0.25),
+      inset 0 1px 0 oklch(1 0 0 / 0.1);
+  }
+
+  .experience-item.is-active .experience-dot {
+    border-color: var(--foreground);
+  }
+
+  .experience-item.is-active .experience-card {
+    border-color: color-mix(in oklch, var(--foreground) 22%, var(--border));
+    box-shadow:
+      0 2px 8px oklch(0 0 0 / 0.08),
+      0 8px 24px oklch(0 0 0 / 0.06);
+  }
+
+  [data-theme='dark'] .experience-item.is-active .experience-card {
+    border-color: color-mix(in oklch, var(--foreground) 18%, var(--border));
+    box-shadow:
+      0 2px 8px oklch(0 0 0 / 0.35),
+      0 8px 24px oklch(0 0 0 / 0.25);
+  }
+</style>

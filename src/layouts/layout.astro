@@ -33,11 +33,9 @@ const { class: className } = Astro.props
     </header>
     <main
       transition:animate="fade"
-      class="box-border flex w-full grow flex-col px-[5vw] pt-10"
+      class={cn('w-full mx-auto flex grow flex-col gap-y-6 px-4 pt-10', className)}
     >
-      <div class={cn('mx-auto flex w-full flex-col gap-y-6', className)}>
-        <slot />
-      </div>
+      <slot />
     </main>
     <Footer />
   </body>
