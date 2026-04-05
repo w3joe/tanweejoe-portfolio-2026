@@ -36,6 +36,8 @@ import { Icon } from 'astro-icon/components'
     const currentTheme = element.getAttribute('data-theme')
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
 
+    window.posthog?.capture('theme_toggled', { theme: newTheme })
+
     if (
       !document.startViewTransition ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -50,7 +52,7 @@ import { Icon } from 'astro-icon/components'
     const y = button.top + button.height / 2
     const maxRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
+      Math.max(y, window.innerHeight - y),
     )
 
     const transition = document.startViewTransition(() => {
@@ -72,23 +74,24 @@ import { Icon } from 'astro-icon/components'
         duration: 500,
         easing: 'ease-in-out',
         pseudoElement: '::view-transition-new(root)',
-      }
+      },
     )
   }
 
   /** One delegated listener — avoids duplicate handlers when `astro:after-swap` runs with `transition:persist`. */
   function initThemeToggleOnce() {
-    if ((window as unknown as { __themeToggleDocListener?: boolean })
-      .__themeToggleDocListener) {
+    if (
+      (window as unknown as { __themeToggleDocListener?: boolean })
+        .__themeToggleDocListener
+    ) {
       return
     }
-    ;(window as unknown as { __themeToggleDocListener: boolean }).__themeToggleDocListener =
-      true
+    ;(
+      window as unknown as { __themeToggleDocListener: boolean }
+    ).__themeToggleDocListener = true
 
     document.addEventListener('click', (event) => {
-      const el = (event.target as HTMLElement | null)?.closest(
-        '#theme-toggle',
-      )
+      const el = (event.target as HTMLElement | null)?.closest('#theme-toggle')
       if (!el) return
       event.preventDefault()
       void handleToggleClick(event, el as HTMLElement)

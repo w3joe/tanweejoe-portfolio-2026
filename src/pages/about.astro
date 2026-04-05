@@ -14,36 +14,47 @@ const projects = await getAllProjects()
     <div class="min-w-full">
       <div class="prose mb-8">
         <p class="mt-0">
-          I&apos;m <strong> Wee Joe</strong>, an AI and software engineer focused on
-          systems that are reliable, observable, and useful in production. I care
-          about turning complex requirements into clear software, whether that is
-          data pipelines, ML services, or full-stack products.
+          I&apos;m <strong> Wee Joe</strong>, an AI and software engineer
+          focused on systems that are reliable, observable, and useful in
+          production. I care about turning complex requirements into clear
+          software, whether that is data pipelines, ML services, or full-stack
+          products.
         </p>
         <p>
-          I am currently pursuing a <strong>BSc in Computer Science</strong> at{' '}
+          I am currently pursuing a <strong>BSc in Computer Science</strong> at{
+            ' '
+          }
           <Link href="https://www.ucl.ac.uk" external underline
             >University College London</Link
           >. Earlier, I completed a Diploma in Computer Engineering at{' '}
           <Link href="https://www.sp.edu.sg" external underline
             >Singapore Polytechnic</Link
-          > (Apr 2020 to May 2023), where I graduated as valedictorian. I have also taken
-          part in the{' '}
+          > (Apr 2020 to May 2023), where I graduated as valedictorian. I have also
+          taken part in the{' '}
           <Link href="https://ases.stanford.edu" external underline
             >Stanford ASES Entrepreneurship Bootcamp</Link
           >.
         </p>
         <p>
           Outside of coursework, I build agentic and ML-heavy projects, from
-          security observability for LLM workflows to embedding-driven simulation, and
-          I enjoy collaborating across research, product, and infrastructure.
+          security observability for LLM workflows to embedding-driven
+          simulation, and I enjoy collaborating across research, product, and
+          infrastructure.
         </p>
         <p>
           Want to collaborate? Reach me on{' '}
-          <Link href="https://www.linkedin.com/in/tanweejoe" external underline
-            >LinkedIn</Link
+          <Link
+            href="https://www.linkedin.com/in/tanweejoe"
+            external
+            underline
+            data-posthog-contact="LinkedIn">LinkedIn</Link
           >{' '}
           or via{' '}
-          <Link href="mailto:tanweejoe@gmail.com" underline>email</Link>.
+          <Link
+            href="mailto:tanweejoe@gmail.com"
+            underline
+            data-posthog-contact="email">email</Link
+          >.
         </p>
       </div>
 
@@ -54,3 +65,22 @@ const projects = await getAllProjects()
     </div>
   </section>
 </Layout>
+
+<script>
+  function setupContactLinks() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-posthog-contact]')
+      .forEach((link) => {
+        link.removeEventListener('click', (link as any).__posthogContactClick)
+        ;(link as any).__posthogContactClick = () => {
+          window.posthog?.capture('contact_link_clicked', {
+            channel: link.dataset.posthogContact,
+            href: link.href,
+          })
+        }
+        link.addEventListener('click', (link as any).__posthogContactClick)
+      })
+  }
+
+  document.addEventListener('astro:page-load', setupContactLinks)
+</script>

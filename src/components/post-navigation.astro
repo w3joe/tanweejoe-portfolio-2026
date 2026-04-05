@@ -22,6 +22,8 @@ const isSubpost = !!parentPost
       !olderPost && 'pointer-events-none opacity-50 cursor-not-allowed',
     )}
     aria-disabled={!olderPost}
+    data-posthog-nav-direction="previous"
+    data-posthog-nav-title={olderPost?.data.title}
   >
     <Icon
       name="lucide:arrow-left"
@@ -74,6 +76,8 @@ const isSubpost = !!parentPost
       !newerPost && 'pointer-events-none opacity-50 cursor-not-allowed',
     )}
     aria-disabled={!newerPost}
+    data-posthog-nav-direction="next"
+    data-posthog-nav-title={newerPost?.data.title}
   >
     <div class="flex flex-col items-end overflow-hidden text-wrap">
       <span class="text-muted-foreground text-right text-xs">
@@ -92,3 +96,23 @@ const isSubpost = !!parentPost
     />
   </Link>
 </nav>
+
+<script>
+  function setupPostNavigation() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-posthog-nav-direction]')
+      .forEach((link) => {
+        link.removeEventListener('click', (link as any).__posthogNavClick)
+        ;(link as any).__posthogNavClick = () => {
+          if (link.getAttribute('aria-disabled') === 'true') return
+          window.posthog?.capture('post_navigation_clicked', {
+            direction: link.dataset.posthogNavDirection,
+            post_title: link.dataset.posthogNavTitle,
+          })
+        }
+        link.addEventListener('click', (link as any).__posthogNavClick)
+      })
+  }
+
+  document.addEventListener('astro:page-load', setupPostNavigation)
+</script>

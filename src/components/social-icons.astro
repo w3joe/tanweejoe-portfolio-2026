@@ -22,6 +22,8 @@ const { links } = Astro.props
           title={label}
           class={buttonVariants({ variant: 'outline', size: 'icon' })}
           external
+          data-posthog-social-label={label}
+          data-posthog-social-href={href}
         >
           <Icon
             name={
@@ -35,3 +37,22 @@ const { links } = Astro.props
     ))
   }
 </ul>
+
+<script>
+  function setupSocialIcons() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-posthog-social-label]')
+      .forEach((link) => {
+        link.removeEventListener('click', (link as any).__posthogSocialClick)
+        ;(link as any).__posthogSocialClick = () => {
+          window.posthog?.capture('social_link_clicked', {
+            label: link.dataset.posthogSocialLabel,
+            href: link.dataset.posthogSocialHref,
+          })
+        }
+        link.addEventListener('click', (link as any).__posthogSocialClick)
+      })
+  }
+
+  document.addEventListener('astro:page-load', setupSocialIcons)
+</script>

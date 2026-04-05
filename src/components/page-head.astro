@@ -26,8 +26,9 @@ const {
 
 const pageTitle = titleIsComplete ? title : `${title} | ${SITE.title}`
 const canonical = canonicalHref(Astro.site, Astro.url.pathname)
-const ogImage =
-  image.startsWith('http') ? image : absoluteUrl(Astro.site, image)
+const ogImage = image.startsWith('http')
+  ? image
+  : absoluteUrl(Astro.site, image)
 
 const websiteSchemas = structuredData
   ? [
@@ -53,11 +54,13 @@ const websiteSchemas = structuredData
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-{noindex ? (
-  <meta name="robots" content="noindex, nofollow" />
-) : (
-  <meta name="robots" content="index, follow" />
-)}
+{
+  noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="index, follow" />
+  )
+}
 
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />

@@ -2,6 +2,7 @@
 import { SITE } from '@/consts'
 import { ClientRouter } from 'astro:transitions'
 import Favicons from './favicons.astro'
+import PostHog from './posthog.astro'
 ---
 
 <head>
@@ -44,6 +45,7 @@ import Favicons from './favicons.astro'
 
   <Favicons />
   <ClientRouter />
+  <PostHog />
 
   <slot />
 </head>

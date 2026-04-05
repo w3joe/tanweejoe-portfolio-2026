@@ -201,6 +201,7 @@ const tocSections = await getTOCSections(currentPostId)
                 <a
                   href={`/tags/${tag}`}
                   class={badgeVariants({ variant: 'muted' })}
+                  data-posthog-tag={tag}
                 >
                   <Icon name="lucide:hash" class="size-3" />
                   {tag}
@@ -258,6 +259,29 @@ const tocSections = await getTOCSections(currentPostId)
       class="mx-auto size-4 transition-all group-hover:-translate-y-0.5"
     />
   </Button>
+
+  <script
+    is:inline
+    define:vars={{ postTitle: post.data.title, postId: currentPostId }}
+  >
+    document.addEventListener('astro:page-load', () => {
+      window.posthog?.capture('blog_post_viewed', {
+        post_id: postId,
+        post_title: postTitle,
+      })
+
+      document.querySelectorAll('a[data-posthog-tag]').forEach((tag) => {
+        tag.removeEventListener('click', tag.__posthogTagClick)
+        tag.__posthogTagClick = () => {
+          window.posthog?.capture('tag_clicked', {
+            tag: tag.dataset.posthogTag,
+            post_id: postId,
+          })
+        }
+        tag.addEventListener('click', tag.__posthogTagClick)
+      })
+    })
+  </script>
 
   <script>
     document.addEventListener('astro:page-load', () => {

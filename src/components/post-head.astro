@@ -38,11 +38,13 @@ const isSub = isSubpost(post.id)
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 
-{isSub ? (
-  <meta name="robots" content="noindex, follow" />
-) : (
-  <meta name="robots" content="index, follow" />
-)}
+{
+  isSub ? (
+    <meta name="robots" content="noindex, follow" />
+  ) : (
+    <meta name="robots" content="index, follow" />
+  )
+}
 
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
