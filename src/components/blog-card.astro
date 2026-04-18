@@ -29,6 +29,8 @@ const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
   <Link
     href={`/${entry.collection}/${entry.id}`}
     class="flex flex-col gap-4 sm:flex-row"
+    data-posthog-post-id={entry.id}
+    data-posthog-post-title={entry.data.title}
   >
     {
       entry.data.image && (
@@ -101,3 +103,22 @@ const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
     </div>
   </Link>
 </div>
+
+<script>
+  function setupBlogCards() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-posthog-post-id]')
+      .forEach((link) => {
+        link.removeEventListener('click', (link as any).__posthogCardClick)
+        ;(link as any).__posthogCardClick = () => {
+          window.posthog?.capture('blog_card_clicked', {
+            post_id: link.dataset.posthogPostId,
+            post_title: link.dataset.posthogPostTitle,
+          })
+        }
+        link.addEventListener('click', (link as any).__posthogCardClick)
+      })
+  }
+
+  document.addEventListener('astro:page-load', setupBlogCards)
+</script>

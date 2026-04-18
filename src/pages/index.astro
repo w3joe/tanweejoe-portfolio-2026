@@ -36,6 +36,7 @@ const featuredProjects = allProjects.slice(0, 4)
         href="/about"
         class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
           ' group shrink-0'}
+        id="view-all-works"
       >
         View all <span
           class="ml-1 transition-transform group-hover:translate-x-1"
@@ -69,6 +70,7 @@ const featuredProjects = allProjects.slice(0, 4)
       <Link
         href="/blog"
         class={buttonVariants({ variant: 'ghost' }) + ' group'}
+        id="see-all-posts"
       >
         See all posts <span
           class="ml-1.5 transition-transform group-hover:translate-x-1"
@@ -78,3 +80,39 @@ const featuredProjects = allProjects.slice(0, 4)
     </div>
   </section>
 </Layout>
+
+<script>
+  function setupIndexLinks() {
+    const viewAllWorks = document.getElementById(
+      'view-all-works',
+    ) as HTMLAnchorElement | null
+    viewAllWorks?.removeEventListener(
+      'click',
+      (viewAllWorks as any).__posthogWorksClick,
+    )
+    ;(viewAllWorks as any).__posthogWorksClick = () => {
+      window.posthog?.capture('view_all_works_clicked')
+    }
+    viewAllWorks?.addEventListener(
+      'click',
+      (viewAllWorks as any).__posthogWorksClick,
+    )
+
+    const seeAllPosts = document.getElementById(
+      'see-all-posts',
+    ) as HTMLAnchorElement | null
+    seeAllPosts?.removeEventListener(
+      'click',
+      (seeAllPosts as any).__posthogPostsClick,
+    )
+    ;(seeAllPosts as any).__posthogPostsClick = () => {
+      window.posthog?.capture('view_all_posts_clicked')
+    }
+    seeAllPosts?.addEventListener(
+      'click',
+      (seeAllPosts as any).__posthogPostsClick,
+    )
+  }
+
+  document.addEventListener('astro:page-load', setupIndexLinks)
+</script>
