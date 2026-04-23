@@ -3,7 +3,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 export const SITE: Site = {
   title: 'Tan Wee Joe',
   description:
-    'AI & Software Engineer — building innovative solutions and experiences to empower lives.',
+    'AI Research Engineer: mechanistic interpretability, world models, multi-agent coordination, and human-aligned AGI.',
   href: 'https://tanweejoe.com',
   author: 'Tan Wee Joe',
   locale: 'en-US',

@@ -1,6 +1,6 @@
 ---
 name: 'Sentrix'
-description: 'Agentic AI security platform — observability with real-time intent classification, anomaly detection, and automated escalation for safe LLM workflows. UCL AI Engine NVIDIA Hackathon and Stanford ASES Bootcamp winner.'
+description: 'Agentic AI security platform with real-time intent classification, anomaly detection, and automated escalation for safe LLM workflows. UCL AI Engine NVIDIA Hackathon and Stanford ASES Bootcamp winner.'
 tags:
   - Python
   - LLM
