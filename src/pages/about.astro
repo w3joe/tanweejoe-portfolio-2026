@@ -2,10 +2,12 @@
 import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
 import ProjectCard from '@/components/project-card.astro'
+import PublicationCard from '@/components/publication-card.astro'
 import Layout from '@/layouts/layout.astro'
-import { getAllProjects } from '@/lib/data-utils'
+import { getAllProjects, getAllPublications } from '@/lib/data-utils'
 
 const projects = await getAllProjects()
+const publications = await getAllPublications()
 ---
 
 <Layout class="max-w-3xl">
@@ -15,8 +17,8 @@ const projects = await getAllProjects()
       <div class="prose mb-8">
         <p class="mt-0">
           I&apos;m <strong> Wee Joe</strong>, an AI research engineer
-          interested in AI research, mechanistic interpretability, and emerging
-          paradigms in agentic intelligence, particularly world models,
+          interested in mechanistic interpretability, reinforcement learning, and
+          emerging paradigms in agentic intelligence, particularly world models,
           multi-agent coordination, and the challenge of keeping post-AGI systems
           human-aligned.
         </p>
@@ -62,6 +64,19 @@ const projects = await getAllProjects()
           >.
         </p>
       </div>
+
+      {
+        publications.length > 0 && (
+          <div class="mb-12">
+            <h2 class="mb-4 text-2xl font-medium">Research</h2>
+            <div class="flex flex-col gap-4">
+              {publications.map((pub) => (
+                <PublicationCard publication={pub} />
+              ))}
+            </div>
+          </div>
+        )
+      }
 
       <h2 class="mb-4 text-2xl font-medium">Projects</h2>
       <div class="flex flex-col gap-4">

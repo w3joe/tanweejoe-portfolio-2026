@@ -1,0 +1,59 @@
+---
+import Link from '@/components/link.astro'
+import { Badge } from '@/components/ui/badge'
+import { Icon } from 'astro-icon/components'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  publication: CollectionEntry<'publications'>
+}
+
+const { publication } = Astro.props
+const { title, authors, abstract, date, venue, link, tags } = publication.data
+
+const year = date.getFullYear()
+const displayAuthors = authors.join(', ')
+---
+
+<div class="glass group rounded-xl border transition-shadow hover:shadow-lg">
+  <Link
+    href={link}
+    class="text-foreground flex flex-col justify-between gap-4 p-6 sm:p-7"
+    external
+  >
+    <div class="min-w-0">
+      <div class="flex items-start justify-between gap-4">
+        <h3 class="text-lg font-semibold leading-snug tracking-tight sm:text-xl">
+          {title}
+        </h3>
+        <Icon
+          name="lucide:arrow-up-right"
+          class="text-muted-foreground group-hover:text-foreground mt-0.5 size-4 shrink-0 transition-colors"
+        />
+      </div>
+      <p class="text-muted-foreground mt-2 text-sm">
+        {displayAuthors}
+      </p>
+      {
+        venue && (
+          <p class="text-muted-foreground/70 mt-1 text-sm italic">{venue}</p>
+        )
+      }
+      <p class="text-muted-foreground/60 mt-1 text-xs">{year}</p>
+    </div>
+
+    <p class="text-muted-foreground text-sm leading-relaxed text-pretty sm:text-base">
+      {abstract}
+    </p>
+
+    {
+      tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 pt-1">
+          {tags.map((tag: string) => (
+            <Badge variant="muted">{tag}</Badge>
+          ))}
+        </div>
+      )
+    }
+  </Link>
+</div>

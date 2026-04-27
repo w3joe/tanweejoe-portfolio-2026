@@ -1,6 +1,15 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import { readingTime, calculateWordCountFromHtml } from '@/lib/utils'
 
+export async function getAllPublications(): Promise<
+  CollectionEntry<'publications'>[]
+> {
+  const publications = await getCollection('publications')
+  return publications.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  )
+}
+
 export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
 }

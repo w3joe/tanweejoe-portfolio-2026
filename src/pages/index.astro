@@ -6,14 +6,16 @@ import HomeHero from '@/components/home-hero.astro'
 import Link from '@/components/link.astro'
 import PageHead from '@/components/page-head.astro'
 import ProjectCard from '@/components/project-card.astro'
+import PublicationCard from '@/components/publication-card.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/layout.astro'
-import { getAllProjects, getRecentPosts } from '@/lib/data-utils'
+import { getAllProjects, getAllPublications, getRecentPosts } from '@/lib/data-utils'
 
 const blog = await getRecentPosts(SITE.featuredPostCount)
 const allProjects = await getAllProjects()
 const featuredProjects = allProjects.slice(0, 4)
+const publications = await getAllPublications()
 ---
 
 <Layout class="max-w-3xl">
@@ -28,6 +30,19 @@ const featuredProjects = allProjects.slice(0, 4)
   <AboutIntro />
 
   <ExperienceSection />
+
+  {
+    publications.length > 0 && (
+      <section class="flex flex-col gap-y-4">
+        <h2 class="text-2xl font-medium">Research</h2>
+        <div class="flex flex-col gap-4">
+          {publications.map((pub) => (
+            <PublicationCard publication={pub} />
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   <section class="flex flex-col gap-y-4">
     <div class="flex items-end justify-between gap-4">
